@@ -1,0 +1,8 @@
+root = true
+
+[*]
+end_of_line = crlf
+indent_style = tab
+
+[*.{props,csproj}]
+indent_size = 2

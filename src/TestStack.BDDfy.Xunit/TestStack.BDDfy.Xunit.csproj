@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>netstandard1.5;net46</TargetFrameworks>
+		<Authors>Shayne van Asperen</Authors>
+		<PackageLicenseUrl>https://github.com/shaynevanasperen/TestStack.BDDfy.Xunit/blob/master/LICENSE</PackageLicenseUrl>
+		<PackageProjectUrl>https://github.com/shaynevanasperen/TestStack.BDDfy.Xunit</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/shaynevanasperen/TestStack.BDDfy.Xunit.git</RepositoryUrl>
+		<RepositoryType>Git</RepositoryType>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<VersionPrefix>1.0.0</VersionPrefix>
+		<VersionSuffix>preview1</VersionSuffix>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<IncludeSymbols>True</IncludeSymbols>
+		<IncludeSource>True</IncludeSource>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="*.ncrunchproject" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="TestStack.BDDfy" Version="4.3.2" />
+		<PackageReference Include="xunit" Version="2.2.0" />
+	</ItemGroup>
+
+</Project>
