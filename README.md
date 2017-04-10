@@ -1,6 +1,6 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/n3kt7x472ma4riqj?svg=true)](https://ci.appveyor.com/project/shaynevanasperen/teststack-bddfy-xunit)
-![License](https://img.shields.io/github/license/shaynevanasperen/teststack.bddfy.xunit.svg)
-![Version](https://img.shields.io/nuget/v/teststack.bddfy.xunit.svg)
+[![license](https://img.shields.io/github/license/shaynevanasperen/TestStack.BDDfy.Xunit.svg)](https://github.com/shaynevanasperen/TestStack.BDDfy.Xunit/blob/master/LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/teststack.bddfy.xunit.svg)](https://www.nuget.org/packages/TestStack.BDDfy.Xunit)
 
 ## TestStack.BDDfy.Xunit
 
