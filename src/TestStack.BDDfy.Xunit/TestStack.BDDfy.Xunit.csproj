@@ -1,18 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard1.5;net46</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
 		<Authors>Shayne van Asperen</Authors>
 		<PackageLicenseUrl>https://github.com/shaynevanasperen/TestStack.BDDfy.Xunit/blob/master/LICENSE</PackageLicenseUrl>
 		<PackageProjectUrl>https://github.com/shaynevanasperen/TestStack.BDDfy.Xunit</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/shaynevanasperen/TestStack.BDDfy.Xunit.git</RepositoryUrl>
 		<RepositoryType>Git</RepositoryType>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-		<VersionPrefix>1.0.0</VersionPrefix>
-		<VersionSuffix></VersionSuffix>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<IncludeSymbols>True</IncludeSymbols>
-		<IncludeSource>True</IncludeSource>
+		<APPVEYOR_BUILD_NUMBER Condition="'$(APPVEYOR_BUILD_NUMBER)' == ''">0</APPVEYOR_BUILD_NUMBER>
+		<MinVerTagPrefix>$(MSBuildProjectName).</MinVerTagPrefix>
+		<FileVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch).$(APPVEYOR_BUILD_NUMBER)</FileVersion>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeSource>true</IncludeSource>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -20,6 +21,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="MinVer" Version="2.3.0" PrivateAssets="All" />
 		<PackageReference Include="TestStack.BDDfy" Version="4.3.2" />
 		<PackageReference Include="xunit" Version="2.2.0" />
 	</ItemGroup>
