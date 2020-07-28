@@ -24,7 +24,7 @@ namespace TestStack.BDDfy.Xunit
 
 		protected override async Task<Tuple<decimal, string>> InvokeTestAsync(ExceptionAggregator aggregator)
 		{
-			BddfyInilializer.EnsureInitialized();
+			BddfyInitializer.EnsureInitialized();
 			TestOutputHelper testOutputHelper = null;
 			foreach (var obj in ConstructorArguments)
 			{
