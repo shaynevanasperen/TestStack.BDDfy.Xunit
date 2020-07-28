@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -142,9 +142,7 @@ namespace TestStack.BDDfy.Xunit
 				if (scenarioGroup.Count() > 1)
 				{
 					// all scenarios in an example based scenario share the same header and narrative
-					var exampleScenario =
-						scenarioGroup
-							.First(); // Fixed bug here: original iterates story.Scenarios instead of scenarioGroup
+					var exampleScenario =	scenarioGroup.First(); // Fixed bug here: original iterates story.Scenarios instead of scenarioGroup
 					Report(exampleScenario);
 
 					if (exampleScenario.Steps.Any())
@@ -161,8 +159,7 @@ namespace TestStack.BDDfy.Xunit
 				}
 				else
 				{
-					foreach (var scenario in scenarioGroup
-					) // Fixed bug here: original iterates story.Scenarios instead of scenarioGroup
+					foreach (var scenario in scenarioGroup) // Fixed bug here: original iterates story.Scenarios instead of scenarioGroup
 					{
 						Report(scenario);
 
@@ -175,9 +172,9 @@ namespace TestStack.BDDfy.Xunit
 						}
 					}
 
-					var exampleScenario =
-						scenarioGroup
-							.First(); // Fixed bug here: original iterates story.Scenarios instead of scenarioGroup
+					var exampleScenario = scenarioGroup.First(); // Fixed bug here: original iterates story.Scenarios instead of scenarioGroup
+					WriteLine();
+					WriteExamples(exampleScenario, scenarioGroup);
 					ReportTags(exampleScenario.Tags);
 				}
 			}
