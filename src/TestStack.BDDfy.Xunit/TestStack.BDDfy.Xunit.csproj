@@ -12,15 +12,18 @@
 		<MinVerTagPrefix>$(MSBuildProjectName).</MinVerTagPrefix>
 		<FileVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch).$(APPVEYOR_BUILD_NUMBER)</FileVersion>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<IncludeSymbols>true</IncludeSymbols>
-		<IncludeSource>true</IncludeSource>
+		<DebugType>embedded</DebugType>
+		<Deterministic>true</Deterministic>
+		<ContinuousIntegrationBuild Condition="'$(APPVEYOR_BUILD_NUMBER)' != '0'">true</ContinuousIntegrationBuild>
+		<EmbedAllSources>true</EmbedAllSources>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Remove="*.ncrunchproject" />
+		<SourceRoot Include="$(MSBuildThisFileDirectory)/" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
 		<PackageReference Include="MinVer" Version="2.3.0" PrivateAssets="All" />
 		<PackageReference Include="TestStack.BDDfy" Version="4.3.2" />
 		<PackageReference Include="xunit" Version="2.2.0" />
