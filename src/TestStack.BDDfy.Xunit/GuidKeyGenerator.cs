@@ -15,6 +15,8 @@ namespace TestStack.BDDfy.Xunit
 			return Guid.NewGuid().ToString();
 		}
 
-		public void Reset() { }
+		public void Reset()
+		{
+		}
 	}
 }

@@ -53,7 +53,7 @@ namespace TestStack.BDDfy.Xunit
 
 		protected override async Task AfterTestCaseStartingAsync()
 		{
-			await base.AfterTestCaseStartingAsync();
+			await base.AfterTestCaseStartingAsync().ConfigureAwait(false);
 
 			try
 			{
@@ -66,9 +66,7 @@ namespace TestStack.BDDfy.Xunit
 					var discovererType = SerializationHelper.GetType(args[1], args[0]);
 					if (discovererType == null)
 					{
-						var reflectionAttribute = dataAttribute as IReflectionAttributeInfo;
-
-						if (reflectionAttribute != null)
+						if (dataAttribute is IReflectionAttributeInfo reflectionAttribute)
 							Aggregator.Add(new InvalidOperationException($"Data discoverer specified for {reflectionAttribute.Attribute.GetType()} on {TestCase.TestMethod.TestClass.Class.Name}.{TestCase.TestMethod.Method.Name} does not exist."));
 						else
 							Aggregator.Add(new InvalidOperationException($"A data discoverer specified on {TestCase.TestMethod.TestClass.Class.Name}.{TestCase.TestMethod.Method.Name} does not exist."));
@@ -83,9 +81,7 @@ namespace TestStack.BDDfy.Xunit
 					}
 					catch (InvalidCastException)
 					{
-						var reflectionAttribute = dataAttribute as IReflectionAttributeInfo;
-
-						if (reflectionAttribute != null)
+						if (dataAttribute is IReflectionAttributeInfo reflectionAttribute)
 							Aggregator.Add(new InvalidOperationException($"Data discoverer specified for {reflectionAttribute.Attribute.GetType()} on {TestCase.TestMethod.TestClass.Class.Name}.{TestCase.TestMethod.Method.Name} does not implement IDataDiscoverer."));
 						else
 							Aggregator.Add(new InvalidOperationException($"A data discoverer specified on {TestCase.TestMethod.TestClass.Class.Name}.{TestCase.TestMethod.Method.Name} does not implement IDataDiscoverer."));
@@ -145,7 +141,7 @@ namespace TestStack.BDDfy.Xunit
 
 			var runSummary = new RunSummary();
 			foreach (var testRunner in _testRunners)
-				runSummary.Aggregate(await testRunner.RunAsync());
+				runSummary.Aggregate(await testRunner.RunAsync().ConfigureAwait(false));
 
 			// Run the cleanup here so we can include cleanup time in the run summary,
 			// but save any exceptions so we can surface them during the cleanup phase,
@@ -158,7 +154,7 @@ namespace TestStack.BDDfy.Xunit
 			return runSummary;
 		}
 
-		RunSummary RunTest_DataDiscoveryException()
+		private RunSummary RunTest_DataDiscoveryException()
 		{
 			var test = new XunitTest(TestCase, DisplayName);
 
@@ -173,7 +169,7 @@ namespace TestStack.BDDfy.Xunit
 		}
 	}
 
-	static class SerializationHelper
+	internal static class SerializationHelper
 	{
 		/// <summary>
 		/// Converts an assembly name + type name into a <see cref="Type"/> object.
@@ -218,7 +214,7 @@ namespace TestStack.BDDfy.Xunit
 		}
 	}
 
-	static class ExecutionHelper
+	internal static class ExecutionHelper
 	{
 		static readonly string executionAssemblyNamePrefix = "xunit.execution.";
 		static string platformSuffix = "__unknown__";
@@ -267,7 +263,7 @@ namespace TestStack.BDDfy.Xunit
 		public static readonly string SubstitutionToken = ".{Platform}";
 	}
 
-	static class ExceptionExtensions
+	internal static class ExceptionExtensions
 	{
 		/// <summary>
 		/// Unwraps an exception to remove any wrappers, like <see cref="TargetInvocationException"/>.

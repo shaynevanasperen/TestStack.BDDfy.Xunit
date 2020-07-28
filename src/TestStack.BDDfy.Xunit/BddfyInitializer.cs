@@ -2,9 +2,9 @@ using TestStack.BDDfy.Configuration;
 
 namespace TestStack.BDDfy.Xunit
 {
-	public class BddfyInilializer
+	public class BddfyInitializer
 	{
-		static BddfyInilializer()
+		static BddfyInitializer()
 		{
 			Configurator.IdGenerator = new GuiKeyGenerator();
 			Configurator.Processors.Add(() => Xunit2BddfyTextReporter.Instance);
