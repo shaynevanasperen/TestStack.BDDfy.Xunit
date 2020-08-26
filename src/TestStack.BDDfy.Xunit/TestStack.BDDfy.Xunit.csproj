@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
 		<Authors>Shayne van Asperen</Authors>
-		<PackageLicenseUrl>https://github.com/shaynevanasperen/TestStack.BDDfy.Xunit/blob/master/LICENSE</PackageLicenseUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/shaynevanasperen/TestStack.BDDfy.Xunit</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/shaynevanasperen/TestStack.BDDfy.Xunit.git</RepositoryUrl>
 		<RepositoryType>Git</RepositoryType>

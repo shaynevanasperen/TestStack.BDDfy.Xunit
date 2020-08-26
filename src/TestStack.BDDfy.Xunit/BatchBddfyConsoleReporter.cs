@@ -173,8 +173,12 @@ namespace TestStack.BDDfy.Xunit
 					}
 
 					var exampleScenario = scenarioGroup.First(); // Fixed bug here: original iterates story.Scenarios instead of scenarioGroup
-					WriteLine();
-					WriteExamples(exampleScenario, scenarioGroup);
+					if (exampleScenario.Example != null)
+					{
+						WriteLine();
+						WriteExamples(exampleScenario, scenarioGroup);
+					}
+
 					ReportTags(exampleScenario.Tags);
 				}
 			}

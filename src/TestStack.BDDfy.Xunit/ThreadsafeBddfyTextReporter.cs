@@ -72,8 +72,12 @@ namespace TestStack.BDDfy.Xunit
 					}
 
 					var exampleScenario = scenarioGroup.First();
-					WriteLine();
-					WriteExamples(exampleScenario, scenarioGroup);
+					if (exampleScenario.Example != null)
+					{
+						WriteLine();
+						WriteExamples(exampleScenario, scenarioGroup);
+					}
+
 					ReportTags(exampleScenario.Tags);
 				}
 			}
