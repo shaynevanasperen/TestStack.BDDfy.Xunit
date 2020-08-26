@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
 		<Authors>Shayne van Asperen</Authors>
+		<Description>Makes it possible to run BDDfy tests using Xunit parallel test execution without causing all the BDDfy reporting to become garbled due to it writing to the Console.</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/shaynevanasperen/TestStack.BDDfy.Xunit</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/shaynevanasperen/TestStack.BDDfy.Xunit.git</RepositoryUrl>
