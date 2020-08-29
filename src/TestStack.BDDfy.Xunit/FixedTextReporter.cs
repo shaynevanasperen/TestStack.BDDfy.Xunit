@@ -1,44 +1,36 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using TestStack.BDDfy.Configuration;
 
 namespace TestStack.BDDfy.Xunit
 {
 	// Modified from https://github.com/TestStack/TestStack.BDDfy/blob/master/src/TestStack.BDDfy/Reporters/TextReporter.cs
-	public class ThreadSafeBddfyTextReporter : IProcessor
+	public class FixedTextReporter : IProcessor
 	{
-		private readonly AsyncLocal<List<Exception>> _exceptions = new AsyncLocal<List<Exception>>();
-		private readonly AsyncLocal<int> _longestStepSentence = new AsyncLocal<int>();
-		protected readonly AsyncLocal<StringBuilder> Text = new AsyncLocal<StringBuilder>();
+		private readonly List<Exception> _exceptions = new List<Exception>();
+		private readonly StringBuilder   _text       = new StringBuilder();
+		private          int             _longestStepSentence;
 
-		public virtual void Process(Story story)
+		public virtual ConsoleColor ForegroundColor { get; set; }
+
+		public void Process(Story story)
 		{
-			if (_exceptions.Value == null)
-			{
-				_exceptions.Value = new List<Exception>();
-			}
-
-			if (Text.Value == null)
-			{
-				Text.Value = new StringBuilder();
-			}
-
 			ReportStoryHeader(story);
 
 			var allSteps = story.Scenarios.SelectMany(s => s.Steps)
-				.Select(GetStepWithLines)
-				.ToList();
+			                    .Select(GetStepWithLines)
+			                    .ToList();
 			if (allSteps.Any())
 			{
-				_longestStepSentence.Value = allSteps.SelectMany(s => s.Item2.Select(l => l.Length)).Max();
+				_longestStepSentence = allSteps.SelectMany(s => s.Item2.Select(l => l.Length)).Max();
 			}
 
 			foreach (var scenarioGroup in story.Scenarios.GroupBy(s => s.Id))
 			{
 				var firstScenario = scenarioGroup.First();
+
 				if (scenarioGroup.Count() > 1)
 				{
 					// all scenarios in an example based scenario share the same header and narrative
@@ -58,7 +50,9 @@ namespace TestStack.BDDfy.Xunit
 					WriteExamples(firstScenario, scenarioGroup);
 				}
 
+
 				ReportTags(firstScenario.Tags);
+				
 			}
 
 			ReportExceptions();
@@ -84,10 +78,10 @@ namespace TestStack.BDDfy.Xunit
 		{
 			return Tuple.Create(s,
 			                    s.Title.Replace("\r\n", "\n").Split('\n')
-				                    .Select(l => PrefixWithSpaceIfRequired(l, s.ExecutionOrder)).ToArray());
+			                     .Select(l => PrefixWithSpaceIfRequired(l, s.ExecutionOrder)).ToArray());
 		}
 
-		private void ReportTags(IReadOnlyCollection<string> tags)
+		private void ReportTags(List<string> tags)
 		{
 			if (!tags.Any())
 			{
@@ -101,16 +95,16 @@ namespace TestStack.BDDfy.Xunit
 		private void WriteExamples(Scenario exampleScenario, IEnumerable<Scenario> scenarioGroup)
 		{
 			WriteLine("Examples: ");
-			var scenarios = scenarioGroup.ToArray();
-			var allPassed = scenarios.All(s => s.Result == Result.Passed);
+			var scenarios      = scenarioGroup.ToArray();
+			var allPassed      = scenarios.All(s => s.Result == Result.Passed);
 			var exampleColumns = exampleScenario.Example.Headers.Length;
-			var numberColumns = allPassed ? exampleColumns : exampleColumns + 2;
-			var maxWidth = new int[numberColumns];
-			var rows = new List<string[]>();
+			var numberColumns  = allPassed ? exampleColumns : exampleColumns + 2;
+			var maxWidth       = new int[numberColumns];
+			var rows           = new List<string[]>();
 
 			void AddRow(IEnumerable<string> cells, string result, string error)
 			{
-				var row = new string[numberColumns];
+				var row   = new string[numberColumns];
 				var index = 0;
 
 				foreach (var cellText in cells)
@@ -141,8 +135,8 @@ namespace TestStack.BDDfy.Xunit
 			{
 				var failingStep = scenario.Steps.FirstOrDefault(s => s.Result == Result.Failed);
 				var error = failingStep == null
-					? null
-					: $"Step: {failingStep.Title} failed with exception: {CreateExceptionMessage(failingStep)}";
+					            ? null
+					            : $"Step: {failingStep.Title} failed with exception: {CreateExceptionMessage(failingStep)}";
 
 				AddRow(scenario.Example.Values.Select(e => e.GetValueAsString()), scenario.Result.ToString(), error);
 			}
@@ -166,7 +160,7 @@ namespace TestStack.BDDfy.Xunit
 
 		private void ReportStoryHeader(Story story)
 		{
-			if (story.Metadata?.Type == null)
+			if (story.Metadata == null || story.Metadata.Type == null)
 			{
 				return;
 			}
@@ -212,7 +206,7 @@ namespace TestStack.BDDfy.Xunit
 				return;
 			}
 
-			var step = stepAndLines.Item1;
+			var step            = stepAndLines.Item1;
 			var humanizedResult = Configurator.Scanners.Humanize(step.Result.ToString());
 
 			string message;
@@ -222,7 +216,7 @@ namespace TestStack.BDDfy.Xunit
 			}
 			else
 			{
-				var paddedFirstLine = stepAndLines.Item2[0].PadRight(_longestStepSentence.Value + 5);
+				var paddedFirstLine = stepAndLines.Item2[0].PadRight(_longestStepSentence + 5);
 				message = $"\t{paddedFirstLine}  [{humanizedResult}] ";
 			}
 
@@ -236,14 +230,28 @@ namespace TestStack.BDDfy.Xunit
 				message += CreateExceptionMessage(step);
 			}
 
+			if (step.Result == Result.Inconclusive || step.Result == Result.NotImplemented)
+			{
+				ForegroundColor = ConsoleColor.Yellow;
+			}
+			else if (step.Result == Result.Failed)
+			{
+				ForegroundColor = ConsoleColor.Red;
+			}
+			else if (step.Result == Result.NotExecuted)
+			{
+				ForegroundColor = ConsoleColor.Gray;
+			}
+
 			WriteLine(message);
+			ForegroundColor = ConsoleColor.White;
 		}
 
 		private string CreateExceptionMessage(Step step)
 		{
-			_exceptions.Value.Add(step.Exception);
+			_exceptions.Add(step.Exception);
 
-			var exceptionReference = $"[Details at {_exceptions.Value.Count} below]";
+			var exceptionReference = $"[Details at {_exceptions.Count} below]";
 			if (!string.IsNullOrEmpty(step.Exception.Message))
 			{
 				return $"[{FlattenExceptionMessage(step.Exception.Message)}] {exceptionReference}";
@@ -255,16 +263,16 @@ namespace TestStack.BDDfy.Xunit
 		private void ReportExceptions()
 		{
 			WriteLine();
-			if (_exceptions.Value.Count == 0)
+			if (_exceptions.Count == 0)
 			{
 				return;
 			}
 
 			Write("Exceptions:");
 
-			for (var index = 0; index < _exceptions.Value.Count; index++)
+			for (var index = 0; index < _exceptions.Count; index++)
 			{
-				var exception = _exceptions.Value[index];
+				var exception = _exceptions[index];
 				WriteLine();
 				Write($"  {index + 1}. ");
 
@@ -286,36 +294,37 @@ namespace TestStack.BDDfy.Xunit
 		private static string FlattenExceptionMessage(string message)
 		{
 			return string.Join(" ", message
-				                   .Replace("\t", " ") // replace tab with one space
-				                   .Split(new[] {"\r\n", "\n"}, StringSplitOptions.None)
-				                   .Select(s => s.Trim()))
-				.TrimEnd(','); // chop any , from the end
+			                        .Replace("\t", " ") // replace tab with one space
+			                        .Split(new[] {"\r\n", "\n"}, StringSplitOptions.None)
+			                        .Select(s => s.Trim()))
+			             .TrimEnd(','); // chop any , from the end
 		}
 
 		private void Report(Scenario scenario)
 		{
+			ForegroundColor = ConsoleColor.White;
 			WriteLine();
 			WriteLine("Scenario: " + scenario.Title);
 		}
 
 		public override string ToString()
 		{
-			return Text.ToString();
+			return _text.ToString();
 		}
 
 		protected virtual void WriteLine(string text = null)
 		{
-			Text.Value.AppendLine(text);
+			_text.AppendLine(text);
 		}
 
 		protected virtual void WriteLine(string text, params object[] args)
 		{
-			Text.Value.AppendLine(string.Format(text, args));
+			_text.AppendLine(string.Format(text, args));
 		}
 
 		protected virtual void Write(string text, params object[] args)
 		{
-			Text.Value.AppendFormat(text, args);
+			_text.AppendFormat(text, args);
 		}
 	}
 }
