@@ -165,7 +165,15 @@ namespace TestStack.BDDfy.Xunit
 				return;
 			}
 
-			WriteLine(story.Metadata.TitlePrefix + story.Metadata.Title);
+			if (!string.IsNullOrEmpty(story.Metadata.StoryUri))
+			{
+				WriteLine($"{story.Metadata.TitlePrefix}{story.Metadata.Title}\t[{story.Metadata.StoryUri}]");
+			}
+			else
+			{
+				WriteLine(story.Metadata.TitlePrefix + story.Metadata.Title);
+			}
+
 			if (!string.IsNullOrEmpty(story.Metadata.Narrative1))
 			{
 				WriteLine("\t" + story.Metadata.Narrative1);
