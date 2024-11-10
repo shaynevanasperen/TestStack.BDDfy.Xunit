@@ -26,12 +26,13 @@ namespace TestStack.BDDfy.Xunit
 		{
 			BddfyInitializer.EnsureInitialized();
 			TestOutputHelper testOutputHelper = null;
-			foreach (var obj in ConstructorArguments)
-			{
-				testOutputHelper = obj as TestOutputHelper;
-				if (testOutputHelper != null)
+			for (var idx = 0; idx < ConstructorArguments.Length; ++idx)
+				if (ConstructorArguments[idx] is Func<TestOutputHelper>)
+				{
+					testOutputHelper = new TestOutputHelper();
+					ConstructorArguments[idx] = testOutputHelper;
 					break;
-			}
+				}
 
 			if (testOutputHelper == null)
 				testOutputHelper = new TestOutputHelper();
