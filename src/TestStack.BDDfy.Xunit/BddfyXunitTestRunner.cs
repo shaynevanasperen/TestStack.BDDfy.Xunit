@@ -27,12 +27,20 @@ namespace TestStack.BDDfy.Xunit
 			BddfyInitializer.EnsureInitialized();
 			TestOutputHelper testOutputHelper = null;
 			for (var idx = 0; idx < ConstructorArguments.Length; ++idx)
+			{
 				if (ConstructorArguments[idx] is Func<TestOutputHelper>)
 				{
 					testOutputHelper = new TestOutputHelper();
 					ConstructorArguments[idx] = testOutputHelper;
 					break;
 				}
+
+				if (ConstructorArguments[idx] is TestOutputHelper existingOutputHelper)
+				{
+					testOutputHelper = existingOutputHelper;
+					break;
+				}
+			}
 
 			if (testOutputHelper == null)
 				testOutputHelper = new TestOutputHelper();
@@ -44,7 +52,6 @@ namespace TestStack.BDDfy.Xunit
 
 			var output = testOutputHelper.Output;
 			testOutputHelper.Uninitialize();
-
 			return Tuple.Create(executionTime, output);
 		}
 	}
