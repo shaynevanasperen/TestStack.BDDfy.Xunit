@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+		<TargetFrameworks>net8.0</TargetFrameworks>
 		<Authors>Shayne van Asperen</Authors>
 		<Description>Makes it possible to run BDDfy tests using Xunit parallel test execution without causing all the BDDfy reporting to become garbled due to it writing to the Console.</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -26,8 +26,8 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
 		<PackageReference Include="MinVer" Version="6.0.0" PrivateAssets="All" />
-		<PackageReference Include="TestStack.BDDfy" Version="4.3.2" />
-		<PackageReference Include="xunit.extensibility.execution" Version="2.9.2" />
+		<PackageReference Include="TestStack.BDDfy" Version="8.0.1.3" />
+		<PackageReference Include="xunit.extensibility.execution" Version="2.9.3" />
 	</ItemGroup>
 
 </Project>
